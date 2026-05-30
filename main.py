@@ -101,6 +101,9 @@ async def proxy(req: ProxyRequest):
                 },
                 json=body,
             )
-            return resp.json()
+            data = resp.json()
+            if data.get("type") == "error":
+                data = {"content": None, "error": data.get("error", str(data))}
+            return data
     except Exception as e:
         raise HTTPException(500, f"proxy failed: {e}")
